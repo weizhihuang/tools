@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainland China Language Researcher Work Time Calculator</title>
+    <style>
+        label {
+            display: inline-block;
+            min-width: 3em;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <label for="start">Start:</label>
+        <select onchange="handleHourChange()">
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+        </select>
+        <span>:</span>
+        <select id="startMinute" onchange="handleMinuteChange()">
+            <option value="30">30</option>
+        </select>
+    </div>
+    <div>
+        <label for="end">End:</label>
+        <select disabled>
+            <option id="endHour">16</option>
+        </select>
+        <span>:</span>
+        <select disabled>
+            <option id="endMinute">00</option>
+        </select>
+    </div>
+</body>
+<script>
+    class WorkTime {
+        startHour = 7;
+        startMinute = 30;
+
+        setHour(hour) {
+            this.startHour = ~~hour;
+            this.setMinute(hour - 7 ? 0 : 30);
+        }
+
+        setMinute(minute) {
+            this.startMinute = ~~minute;
+        }
+
+        getEndTime() {
+            const endTime = this.startHour * 100 + this.startMinute + 830;
+            return endTime + (endTime % 100 > 59 ? 40 : 0);
+        }
+    }
+
+    function showEndTime() {
+        const endTime = workTime.getEndTime();
+        const endMinute = endTime % 100;
+        document.getElementById("endHour").innerText = ~~(endTime / 100);
+        document.getElementById("endMinute").innerText = endMinute < 10 ? '0' + endMinute : endMinute;
+    }
+
+    function handleHourChange() {
+        const { value } = event.target;
+        const startMinuteElement = document.getElementById("startMinute");
+        let mLen = 60;
+        let bias = 0;
+
+        workTime.setHour(value);
+
+        switch (value) {
+            case "7":
+                bias += 30;
+            case "9":
+                mLen -= 30;
+        }
+
+        startMinuteElement.innerHTML = [...Array(mLen).keys()].map(m => {
+            m += bias;
+            return `<option value="${m}">${m > 9 ? m : '0' + m}</option>`;
+        }).join("");
+
+        showEndTime();
+    }
+
+    function handleMinuteChange() {
+        workTime.setMinute(event.target.value);
+        showEndTime();
+    }
+
+    const workTime = new WorkTime();
+
+    window.onload = () => {
+        document.getElementById("startMinute").innerHTML = [...Array(30).keys()].map(m => `<option value="${m + 30}">${m + 30}</option>`).join("");
+    }
+</script>
+
+</html>
