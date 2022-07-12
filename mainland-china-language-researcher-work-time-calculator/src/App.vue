@@ -7,10 +7,8 @@ const startMinute = ref(30);
 const fixMinute = (minute: number) => minute + (startHour.value - 7 ? -1 : 29);
 
 const minuteLen = computed(() => (startHour.value - 8 ? 30 : 60));
-const endHour = computed(() =>
-  (startHour.value + 8 + (startMinute.value > 29 ? 1 : 0))
-    .toString()
-    .padStart(2, "0")
+const endHour = computed(
+  () => startHour.value + 8 + (startMinute.value > 29 ? 1 : 0)
 );
 const endMinute = computed(() =>
   ((startMinute.value + 30) % 60).toString().padStart(2, "0")
