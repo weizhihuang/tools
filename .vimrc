@@ -13,7 +13,6 @@ ino " ""<Esc>i
 ino ' ''<Esc>i
 ino [ []<Esc>i
 ino {<CR> {<CR>}<Esc>ko
-ino <Space>// <Space>//<Space>
 hi LineNr cterm=bold ctermfg=DarkGrey
 hi CursorLineNr cterm=bold ctermfg=LightCyan
 
