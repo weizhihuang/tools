@@ -1,11 +1,11 @@
-set bg=dark
-set nu
-set cul
-set ts=4
-set sw=4
-set et
-set si
-set fo+=r
+se bg=dark
+se nu
+se cul
+se ts=4
+se sw=4
+se et
+se si
+se fo+=r
 no # I# <Esc>hj
 no // I// <Esc>hj
 ino (( ()<Esc>i
@@ -18,3 +18,5 @@ hi CursorLineNr cterm=bold ctermfg=LightCyan
 
 hi TrailingWhitespace ctermbg=red
 mat TrailingWhitespace /\s\+$/
+
+au filetype yaml setl ts=2 sw=2
