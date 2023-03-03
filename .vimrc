@@ -16,6 +16,9 @@ ino {<CR> {<CR>}<Esc>ko
 hi LineNr cterm=bold ctermfg=DarkGrey
 hi CursorLineNr cterm=bold ctermfg=LightCyan
 
+se list
+se lcs=tab:▸·
+
 hi TrailingWhitespace ctermbg=red
 mat TrailingWhitespace /\s\+$/
 
