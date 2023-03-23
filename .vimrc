@@ -10,8 +10,8 @@ no # I# <Esc>hj
 no // I// <Esc>hj
 ino (( ()<Esc>i
 ino "" ""<Esc>i
-ino ' ''<Esc>i
-ino [] []<Esc>i
+ino '' ''<Esc>i
+ino [[ []<Esc>i
 ino {<CR> {<CR>}<Esc>ko
 hi LineNr cterm=bold ctermfg=DarkGrey
 hi CursorLineNr cterm=bold ctermfg=LightCyan
