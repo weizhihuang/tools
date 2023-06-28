@@ -22,5 +22,7 @@ se lcs=tab:▸·
 hi TrailingWhitespace ctermbg=red
 mat TrailingWhitespace /\s\+$/
 
-au filetype yaml setl ts=2 sw=2
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+au filetype yaml setl ts=2 sw=2
+au filetype json setl ci
