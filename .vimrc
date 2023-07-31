@@ -1,3 +1,4 @@
+syn on
 se bg=dark
 se nu
 se cul
