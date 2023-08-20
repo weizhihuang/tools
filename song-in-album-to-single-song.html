@@ -8,33 +8,37 @@
 </head>
 
 <style>
-    input[type="text"] {
+    td:nth-child(2)>input[type="text"] {
         min-width: 25vw;
     }
 
     input[type="reset"],
     button {
-        width: 100%;
+        width: 5em;
     }
 </style>
 
 <body>
-    <form onsubmit="event.preventDefault()" onreset="handleReset()">
+    <form onsubmit="event.preventDefault()">
         <table>
             <tbody>
                 <tr>
                     <td><label for="inAlbum">Song in album:</label></td>
                     <td><input type="text" id="inAlbum" oninput="transform()"></td>
-                    <td><input type="reset"></td>
+                    <td><input type="reset" onclick="handleReset()"></td>
                     <td>
-                        <input type="checkbox" id="autoCopy" onchange="onChange()">
-                        <label for="autoCopy">Auto copy</label>
+                        <label for="region">To region:</label>
+                        <input type="text" id="region" placeholder="e.g. jp">
                     </td>
                 </tr>
-                <tr onclick="copy()">
+                <tr>
                     <td><label for="single">Single song:</label></td>
-                    <td><input type="text" id="single" oninput="transform()" disabled></td>
-                    <td><button id="copy">Copy</button></td>
+                    <td><a id="single"></a></td>
+                    <td><button id="copy" onclick="copy()">Copy</button></td>
+                    <td>
+                        <input type="checkbox" id="autoCopy" onclick="onClick()">
+                        <label for="autoCopy">Auto copy</label>
+                    </td>
                     <td></td>
                 </tr>
             </tbody>
@@ -43,20 +47,19 @@
 </body>
 <script>
     function handleReset() {
-        if (localStorage.getItem("autoCopy") === "true")
-            setTimeout(() => {
-                document.getElementById("autoCopy").checked = true;
-            }, 0);
+        event.preventDefault();
+        document.getElementById("inAlbum").value = "";
+        document.getElementById("single").innerText = "";
         document.getElementById("copy").innerText = "Copy";
         document.getElementById("inAlbum").focus();
     }
 
     function transform() {
-        document.getElementById("single").value = event.target.value.replace(/(.+)album(.+\/)\d+\?i=(\d+)/, "$1song$2$3");
+        document.getElementById("single").innerText = event.target.value.replace(/(.+)\/([a-z]{2})\/album(.+\/)\d+\?i=(\d+)/, `$1/${document.getElementById("region").value.trim() || "$2"}/song$3$4`);
         if (localStorage.autoCopy === "true") copy();
     }
 
-    function onChange() {
+    function onClick() {
         localStorage.autoCopy = event.target.checked;
     }
 
@@ -69,7 +72,10 @@
         }
     }
 
-    onload = handleReset
+    onload = () => {
+        if (localStorage.getItem("autoCopy") === "true")
+            document.getElementById("autoCopy").checked = true;
+    }
 </script>
 
 </html>
