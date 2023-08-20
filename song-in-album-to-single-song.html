@@ -19,62 +19,60 @@
 </style>
 
 <body>
-    <form onsubmit="event.preventDefault()">
-        <table>
-            <tbody>
-                <tr>
-                    <td><label for="inAlbum">Song in album:</label></td>
-                    <td><input type="text" id="inAlbum" oninput="transform()"></td>
-                    <td><input type="reset" onclick="handleReset()"></td>
-                    <td>
-                        <label for="region">To region:</label>
-                        <input type="text" id="region" placeholder="e.g. jp">
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="single">Single song:</label></td>
-                    <td><a id="single"></a></td>
-                    <td><button id="copy" onclick="copy()">Copy</button></td>
-                    <td>
-                        <input type="checkbox" id="autoCopy" onclick="onClick()">
-                        <label for="autoCopy">Auto copy</label>
-                    </td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
+    <table>
+        <tbody>
+            <tr>
+                <td><label for="inAlbum">Song in album:</label></td>
+                <td><input type="text" id="inAlbum" oninput="transform(event.target)"></td>
+                <td><input type="reset" onclick="handleReset()"></td>
+                <td>
+                    <label for="region">To region:</label>
+                    <input type="text" id="region" placeholder="e.g. jp">
+                </td>
+            </tr>
+            <tr>
+                <td><label for="single">Single song:</label></td>
+                <td><a id="single" target="_blank"></a></td>
+                <td><button id="copy" onclick="handleCopy()">Copy</button></td>
+                <td>
+                    <input type="checkbox" id="autoCopy"
+                        onclick="localStorage.setItem('autoCopy', event.target.checked)">
+                    <label for="autoCopy">Auto copy</label>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 <script>
-    function handleReset() {
-        event.preventDefault();
-        document.getElementById("inAlbum").value = "";
-        document.getElementById("single").innerText = "";
-        document.getElementById("copy").innerText = "Copy";
-        document.getElementById("inAlbum").focus();
+    onload = () => {
+        if (localStorage.getItem("autoCopy") === "true")
+            document.getElementById("autoCopy").checked = true;
     }
 
-    function transform() {
-        document.getElementById("single").innerText = event.target.value.replace(/(.+)\/([a-z]{2})\/album(.+\/)\d+\?i=(\d+)/, `$1/${document.getElementById("region").value.trim() || "$2"}/song$3$4`);
-        if (localStorage.autoCopy === "true") copy();
-    }
-
-    function onClick() {
-        localStorage.autoCopy = event.target.checked;
-    }
-
-    function copy() {
+    function handleCopy() {
+        console.log(document.getElementById("single"))
         if (navigator.clipboard) {
-            navigator.clipboard.writeText(document.getElementById("single").value);
+            navigator.clipboard.writeText(document.getElementById("single").href);
             document.getElementById("copy").innerText = "Copied!";
         } else {
             alert("Unsupported!");
         }
     }
 
-    onload = () => {
-        if (localStorage.getItem("autoCopy") === "true")
-            document.getElementById("autoCopy").checked = true;
+    function transform({ value: url }) {
+        const single = document.getElementById("single");
+        single.href = url.replace(/(.+)\/([a-z]{2})\/album(.+\/)\d+\?i=(\d+)/, `$1/${document.getElementById("region").value.trim() || "$2"}/song$3$4`);
+        single.innerText = decodeURI(url.replace(/.+\/album\/(.+)\/.+/, "$1"));
+        if (localStorage.autoCopy === "true") handleCopy();
+    }
+
+    function handleReset() {
+        event.preventDefault();
+        document.getElementById("inAlbum").value = "";
+        document.getElementById("single").innerText = "";
+        document.getElementById("copy").innerText = "Copy";
+        document.getElementById("inAlbum").focus();
     }
 </script>
 
