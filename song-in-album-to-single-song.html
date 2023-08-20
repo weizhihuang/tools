@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song in album to single song on Apple Music</title>
+</head>
+
+<style>
+    input[type="text"] {
+        min-width: 25vw;
+    }
+
+    input[type="reset"],
+    button {
+        width: 100%;
+    }
+</style>
+
+<body>
+    <form onsubmit="event.preventDefault()" onreset="handleReset()">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="inAlbum">Song in album:</label></td>
+                    <td><input type="text" id="inAlbum" oninput="transform()"></td>
+                    <td><input type="reset"></td>
+                    <td>
+                        <input type="checkbox" id="autoCopy" onchange="onChange()">
+                        <label for="autoCopy">Auto copy</label>
+                    </td>
+                </tr>
+                <tr onclick="copy()">
+                    <td><label for="single">Single song:</label></td>
+                    <td><input type="text" id="single" oninput="transform()" disabled></td>
+                    <td><button id="copy">Copy</button></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+<script>
+    function handleReset() {
+        if (localStorage.getItem("autoCopy") === "true")
+            setTimeout(() => {
+                document.getElementById("autoCopy").checked = true;
+            }, 0);
+        document.getElementById("copy").innerText = "Copy";
+        document.getElementById("inAlbum").focus();
+    }
+
+    function transform() {
+        document.getElementById("single").value = event.target.value.replace(/(.+)album(.+\/)\d+\?i=(\d+)/, "$1song$2$3");
+        if (localStorage.autoCopy === "true") copy();
+    }
+
+    function onChange() {
+        localStorage.autoCopy = event.target.checked;
+    }
+
+    function copy() {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(document.getElementById("single").value);
+            document.getElementById("copy").innerText = "Copied!";
+        } else {
+            alert("Unsupported!");
+        }
+    }
+
+    onload = handleReset
+</script>
+
+</html>
