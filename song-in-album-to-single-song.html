@@ -23,7 +23,8 @@
         <tbody>
             <tr>
                 <td><label for="inAlbum">Song in album:</label></td>
-                <td><input type="text" id="inAlbum" oninput="transform(this.value)" onclick="this.select()"></td>
+                <td><input type="text" id="inAlbum" oninput="transform(this.value)" onclick="this.select()" autofocus>
+                </td>
                 <td><input type="reset" onclick="handleReset()"></td>
                 <td>
                     <label for="region">To region:</label>
@@ -47,6 +48,10 @@
     onload = () => {
         if (localStorage.getItem("autoCopy") === "true")
             document.getElementById("autoCopy").checked = true;
+    }
+
+    onfocus = () => {
+        document.getElementById("inAlbum").focus();
     }
 
     function handleCopy() {
