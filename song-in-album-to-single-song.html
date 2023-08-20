@@ -23,7 +23,7 @@
         <tbody>
             <tr>
                 <td><label for="inAlbum">Song in album:</label></td>
-                <td><input type="text" id="inAlbum" oninput="transform(event.target)" onclick="this.select()"></td>
+                <td><input type="text" id="inAlbum" oninput="transform(this.value)" onclick="this.select()"></td>
                 <td><input type="reset" onclick="handleReset()"></td>
                 <td>
                     <label for="region">To region:</label>
@@ -35,8 +35,7 @@
                 <td><a id="single" target="_blank"></a></td>
                 <td><button id="copy" onclick="handleCopy()">Copy</button></td>
                 <td>
-                    <input type="checkbox" id="autoCopy"
-                        onclick="localStorage.setItem('autoCopy', event.target.checked)">
+                    <input type="checkbox" id="autoCopy" onclick="localStorage.setItem('autoCopy', this.checked)">
                     <label for="autoCopy">Auto copy</label>
                 </td>
                 <td></td>
@@ -60,7 +59,7 @@
         }
     }
 
-    function transform({ value: url }) {
+    function transform(url) {
         const single = document.getElementById("single");
         single.href = url.replace(/(.+)\/([a-z]{2})\/album(.+\/)\d+\?i=(\d+)/, `$1/${document.getElementById("region").value.trim() || "$2"}/song$3$4`);
         single.innerText = decodeURI(url.replace(/.+\/album\/(.+)\/.+/, "$1"));
