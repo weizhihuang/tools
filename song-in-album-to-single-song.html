@@ -73,7 +73,7 @@
 
     function transform(url) {
         const single = document.getElementById("single");
-        single.href = url.replace(/(.+)\/album\/(.+\/)\d+\?i=(\d+)&.+/, `$1/song/$2$3`);
+        single.href = url.replace(/(.+)\/album\/(.+\/)\d+\?i=(\d+)(&.+)*/, `$1/song/$2$3`);
 
         let link;
         try {
