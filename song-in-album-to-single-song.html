@@ -8,6 +8,10 @@
 </head>
 
 <style>
+    td:nth-child(1)>input[type="text"] {
+        max-width: 1.25em;
+    }
+
     td:nth-child(2)>input[type="text"] {
         min-width: 25vw;
     }
@@ -26,10 +30,6 @@
                 <td><input type="text" id="inAlbum" oninput="transform(this.value)" onclick="this.select()" autofocus>
                 </td>
                 <td><input type="reset" onclick="handleReset()"></td>
-                <td>
-                    <label for="region">To region:</label>
-                    <input type="text" id="region" placeholder="e.g. jp">
-                </td>
             </tr>
             <tr>
                 <td><label for="single">Single song:</label></td>
@@ -39,6 +39,14 @@
                     <input type="checkbox" id="autoCopy" onclick="localStorage.setItem('autoCopy', this.checked)">
                     <label for="autoCopy">Auto copy</label>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="region">Region:</label>
+                    <input type="text" id="region" oninput="transform(document.getElementById('inAlbum').value)">
+                </td>
+                <td id="regionLink"></td>
+                <td></td>
                 <td></td>
             </tr>
         </tbody>
@@ -55,7 +63,6 @@
     }
 
     function handleCopy() {
-        console.log(document.getElementById("single"))
         if (navigator.clipboard) {
             navigator.clipboard.writeText(document.getElementById("single").href);
             document.getElementById("copy").innerText = "Copied!";
@@ -66,9 +73,28 @@
 
     function transform(url) {
         const single = document.getElementById("single");
-        single.href = url.replace(/(.+)\/([a-z]{2})\/album(.+\/)\d+\?i=(\d+)/, `$1/${document.getElementById("region").value.trim() || "$2"}/song$3$4`);
-        single.innerText = decodeURI(url.replace(/.+\/album\/(.+)\/.+/, "$1"));
-        if (localStorage.autoCopy === "true") handleCopy();
+        single.href = url.replace(/(.+)\/album\/(.+\/)\d+\?i=(\d+)/, `$1/song/$2$3`);
+
+        let link;
+        try {
+            link = decodeURI(url.replace(/.+\/album\/(.+)\/.+/, "$1"));
+        } catch (_) {
+            link = url.replace(/.+\/album\/(.+)\/.+/, "$1");
+        } finally {
+            single.innerText = link;
+        }
+
+        if (localStorage.autoCopy === "true")
+            handleCopy();
+        else
+            document.getElementById("copy").innerText = "Copy";
+
+        document.getElementById("regionLink").innerText = "";
+        if (region = document.getElementById("region").value.trim()) {
+            regionSingle = single.cloneNode(true);
+            regionSingle.href = regionSingle.href.replace(/(.+)\/.+\/(song\/.+)/, `$1/${region}/$2`);
+            document.getElementById("regionLink").appendChild(regionSingle);
+        }
     }
 
     function handleReset() {
@@ -76,6 +102,7 @@
         document.getElementById("inAlbum").value = "";
         document.getElementById("single").innerText = "";
         document.getElementById("copy").innerText = "Copy";
+        document.getElementById("regionLink").innerText = "";
         document.getElementById("inAlbum").focus();
     }
 </script>
