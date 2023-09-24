@@ -75,14 +75,10 @@
         const single = document.getElementById("single");
         single.href = url.replace(/(.+)\/album\/(.+\/)\d+\?i=(\d+)(&.+)*/, `$1/song/$2$3`);
 
-        let link;
         try {
-            link = decodeURI(url.replace(/.+\/album\/(.+)\/.+/, "$1"));
-        } catch (_) {
-            link = url.replace(/.+\/album\/(.+)\/.+/, "$1");
-        } finally {
-            single.innerText = link;
-        }
+            single.innerText = url.replace(/.+\/(album|song)\/(.+)\/.+/, "$2");
+            single.innerText = decodeURI(single.innerText);
+        } catch { }
 
         if (localStorage.autoCopy === "true")
             handleCopy();
@@ -91,7 +87,7 @@
 
         document.getElementById("regionLink").innerText = "";
         if (region = document.getElementById("region").value.trim()) {
-            regionSingle = single.cloneNode(true);
+            const regionSingle = single.cloneNode(true);
             regionSingle.href = regionSingle.href.replace(/(.+)\/.+\/(song\/.+)/, `$1/${region}/$2`);
             document.getElementById("regionLink").appendChild(regionSingle);
         }
